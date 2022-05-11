@@ -4,11 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <modules>
         <module>common</module>
-        <module>common/common-util</module>
+        <module>common/common_util</module>
         <module>common/service_util</module>
         <module>model</module>
         <module>service</module>
         <module>service/service_user</module>
+        <module>service/service_hosp</module>
+        <module>common/common_util</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -38,6 +40,7 @@
         <jodatime.version>2.10.1</jodatime.version>
     </properties>
 
+    <!-- dependencyManagement使所有子项目再次引入包含的jar时，无需指定版本号 -->
     <dependencyManagement>
         <dependencies>
             <dependency>
