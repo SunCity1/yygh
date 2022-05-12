@@ -19,6 +19,7 @@ import java.util.Random;
 @Api(tags = "医院设置管理")   // @Api：修饰整个类，描述Controller的作用
 @RestController
 @RequestMapping("/admin/hosp/hospitalSet")
+@CrossOrigin    // 允许跨域访问
 public class HospitalSetController {
 
     // 注入service
