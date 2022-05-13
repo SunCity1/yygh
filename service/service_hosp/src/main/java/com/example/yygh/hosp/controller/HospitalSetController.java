@@ -56,7 +56,7 @@ public class HospitalSetController {
                                   // @RequestBody 当前请求的请求体会为当前注解所标识的形参赋值
                                   @RequestBody(required = false) HospitalSetQueryVo hospitalSetQueryVo) {
         // 创建 page 对象，传递当前页，每页记录数
-        Page<HospitalSet> page = new Page<>();
+        Page<HospitalSet> page = new Page<>(current, limit);
         // 构建条件
         QueryWrapper<HospitalSet> wrapper = new QueryWrapper<>();
         String hosname = hospitalSetQueryVo.getHosname();   // 医院名称
