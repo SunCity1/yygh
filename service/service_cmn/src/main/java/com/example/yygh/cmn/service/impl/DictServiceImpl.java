@@ -9,7 +9,8 @@ import com.example.yygh.cmn.service.DictService;
 import com.example.yygh.model.cmn.Dict;
 import com.example.yygh.vo.cmn.DictEeVo;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     // 根据数据 id 查询子数据列表
     @Override
+    @Cacheable(value = "dict", keyGenerator = "keyGenerator")
     public List<Dict> findChildData(Long id) {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         // id 对应 表中的 parent_id 字段
@@ -38,9 +40,10 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         return list;
     }
 
+    // 导出数据字典
     @Override
+    @CacheEvict(value = "dict", allEntries=true)
     public void exportDictData(HttpServletResponse response) {
-        // 导出数据字典
         try {
             // 设置下载信息
             response.setContentType("application/vnd.ms-excel");
