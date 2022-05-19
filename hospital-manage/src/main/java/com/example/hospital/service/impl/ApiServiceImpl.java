@@ -9,6 +9,7 @@ import com.example.hospital.model.Schedule;
 import com.example.hospital.service.ApiService;
 import com.example.hospital.util.BeanUtils;
 import com.example.hospital.util.HttpRequestHelper;
+import com.example.hospital.util.MD5;
 import com.example.hospital.util.YyghException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -98,7 +99,7 @@ public class ApiServiceImpl implements ApiService {
         paramMap.put("bookingRule",bookingRule.toJSONString());
 
         paramMap.put("timestamp", HttpRequestHelper.getTimestamp());
-        paramMap.put("sign", HttpRequestHelper.getSign(paramMap, this.getSignKey()));
+        paramMap.put("sign", MD5.encrypt(this.getSignKey()));
 
         JSONObject respone = HttpRequestHelper.sendRequest(paramMap,this.getApiUrl()+"/api/hosp/saveHospital");
         System.out.println(respone.toJSONString());
