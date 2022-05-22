@@ -33,8 +33,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         // 如果存在，进行修改
         if (departmentExist != null) {
             departmentExist.setUpdateTime(new Date());
-            department.setIsDeleted(0);
-            departmentRepository.save(department);
+            departmentExist.setIsDeleted(0);
+            departmentRepository.save(departmentExist);
         } else {
             // 如果不存在，进行添加
             department.setCreateTime(new Date());

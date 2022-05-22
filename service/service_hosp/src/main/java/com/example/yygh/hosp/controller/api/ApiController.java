@@ -1,5 +1,8 @@
 package com.example.yygh.hosp.controller.api;
 
+import com.example.yygh.hosp.service.ScheduleService;
+import com.example.yygh.model.hosp.Schedule;
+import com.example.yygh.vo.hosp.ScheduleQueryVo;
 import org.springframework.data.domain.Page;
 import com.example.yygh.common.exception.YyghException;
 import com.example.yygh.common.helper.HttpRequestHelper;
@@ -36,6 +39,9 @@ public class ApiController {
 
     @Autowired
     private DepartmentService departmentService;
+
+    @Autowired
+    private ScheduleService scheduleService;
 
 
     // 上传医院接口
@@ -164,6 +170,79 @@ public class ApiController {
         return Result.ok();
 
     }
+
+    // 上传排班
+    @ApiOperation("上传排班")
+    @PostMapping("saveSchedule")
+    public Result saveSchedule(HttpServletRequest request) {
+        // 获取传递过来的排班信息,map接收
+        Map<String, String[]> requestMap = request.getParameterMap();
+        Map<String, Object> paramMap = HttpRequestHelper.switchMap(requestMap);
+
+        // 医院编号
+        String hoscode = (String) paramMap.get("hoscode");
+
+        // 对接口调用者进行签名校验，权限的认定
+        String hospSign = (String) paramMap.get("sign");
+        if (!isIdentity(hoscode, hospSign)) {
+            throw new YyghException(ResultCodeEnum.SIGN_ERROR);
+        }
+
+        scheduleService.save(paramMap);
+        return Result.ok();
+    }
+
+    // 查询排班
+    @ApiOperation("查询排班")
+    @PostMapping("schedule/list")
+    public Result findSchedule(HttpServletRequest request) {
+        // 获取传递过来的排班信息,map接收
+        Map<String, String[]> requestMap = request.getParameterMap();
+        Map<String, Object> paramMap = HttpRequestHelper.switchMap(requestMap);
+
+        // 医院编号
+        String hoscode = (String) paramMap.get("hoscode");
+        int page = StringUtils.isEmpty(paramMap.get("page")) ? 1 : Integer.parseInt((String)paramMap.get("page"));
+        int limit = StringUtils.isEmpty(paramMap.get("limit")) ? 10 : Integer.parseInt((String)paramMap.get("limit"));
+
+        // 对接口调用者进行签名校验，权限的认定
+        String hospSign = (String) paramMap.get("sign");
+        if (!isIdentity(hoscode, hospSign)) {
+            throw new YyghException(ResultCodeEnum.SIGN_ERROR);
+        }
+
+        ScheduleQueryVo scheduleQueryVo = new ScheduleQueryVo();
+        scheduleQueryVo.setHoscode(hoscode);
+        // 调用 service 的方法
+        Page<Schedule> pageModel = scheduleService.findPageSchedule(page, limit, scheduleQueryVo);
+
+        return Result.ok(pageModel);
+    }
+
+    // 删除排班
+    @ApiOperation(value = "删除排班")
+    @PostMapping("schedule/remove")
+    public Result removeSchedule(HttpServletRequest request) {
+        // 获取传递过来的科室信息,map接收
+        Map<String, String[]> requestMap = request.getParameterMap();
+        Map<String, Object> paramMap = HttpRequestHelper.switchMap(requestMap);
+
+        // 医院编号
+        String hoscode = (String) paramMap.get("hoscode");
+        String hosScheduleId = (String)paramMap.get("hosScheduleId");
+
+        // 对接口调用者进行签名校验，权限的认定
+        String hospSign = (String) paramMap.get("sign");
+        if (!isIdentity(hoscode, hospSign)) {
+            throw new YyghException(ResultCodeEnum.SIGN_ERROR);
+        }
+
+        // 调用 service 的方法
+        scheduleService.remove(hoscode, hosScheduleId);
+        return Result.ok();
+
+    }
+
 
     private boolean isIdentity(String hoscode, String hospSign) {
         // 根据传递过来的医院编码，查询数据库,获取签名
