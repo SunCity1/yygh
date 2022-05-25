@@ -45,6 +45,7 @@ public class DictController {
     }
 
     // 根据 dictcode 和 value 查询
+    @ApiOperation(value = "根据 dictcode 和 value 查询")
     @GetMapping("getName/{dictCode}/{value}")
     public String getName(@PathVariable("dictCode") String dictCode,
                           @PathVariable("dictCode") String value) {
@@ -52,10 +53,19 @@ public class DictController {
         return dictName;
     }
     // 根据 value 查询
+    @ApiOperation(value = "根据 value 查询")
     @GetMapping("getName/{value}")
     public String getName(@PathVariable("value") String value) {
         String dictName = dictService.getDictName("", value);
         return dictName;
+    }
+
+    // 根据 dictcode 获取下级节点
+    @ApiOperation(value = "根据 dictcode 获取下级节点")
+    @GetMapping("/findByDictCode/{dictCode}")
+    public Result findByDictCode(@PathVariable("dictCode") String dictCode) {
+        List<Dict> list = dictService.findByDictCode(dictCode);
+        return Result.ok(list);
     }
 
 }

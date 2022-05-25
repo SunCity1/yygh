@@ -35,7 +35,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         // 对每个子数据实体类的是否含有子节点的字段赋值
         for (Dict dict : list) {
             Long dictId = dict.getId();
-            boolean isChild = isChildren(dictId);
+            boolean isChild = this.isChildren(dictId);
             dict.setHasChildren(isChild);
         }
         return list;
@@ -100,6 +100,16 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
             }
         }
         return "";
+    }
+
+    // 根据 dictcode 获取下级节点
+    @Override
+    public List<Dict> findByDictCode(String dictCode) {
+        // 根据 dictcode 查询 id
+        Dict dict = this.getDictByDictCode(dictCode);
+        // 根据 id 获取子节点
+        List<Dict> dictList = this.findChildData(dict.getId());
+        return dictList;
     }
 
     //判断id下面是否有子节点
