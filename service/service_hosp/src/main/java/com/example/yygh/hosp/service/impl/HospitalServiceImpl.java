@@ -110,6 +110,16 @@ public class HospitalServiceImpl implements HospitalService {
 
     }
 
+    //医院名称
+    @Override
+    public String getHospName(String hoscode) {
+        Hospital hospital = hospitalRepository.getHospitalByHoscode(hoscode);
+        if (hospital != null) {
+            return hospital.getHosname();
+        }
+        return null;
+    }
+
     // 获取查询 list 集合， 遍历进行医院等级信息封装
     private Hospital setHospitalHosType(Hospital hospital) {
         // 根据 dictcode 和 value 获取医院等级信息
