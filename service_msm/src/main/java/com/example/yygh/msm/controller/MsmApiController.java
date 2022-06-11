@@ -21,13 +21,13 @@ public class MsmApiController {
     private MsmService msmService;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     // 发送手机验证码
     @GetMapping("send/{phone}")
     public Result sendCode(@PathVariable("phone") String phone) {
         // 从 redis 中获取验证码，如果获取到，返回ok，获取不到则通过短信服务进行发送
-        String code = (String) redisTemplate.opsForValue().get(phone);
+        String code = redisTemplate.opsForValue().get(phone);
         if (!StringUtils.isEmpty(code)) {
             return Result.ok();
         }
