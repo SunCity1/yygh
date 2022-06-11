@@ -13,6 +13,7 @@
         <module>common/common_util</module>
         <module>service-client</module>
         <module>service-gateway</module>
+        <module>service_msm</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
