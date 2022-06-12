@@ -9,4 +9,7 @@ import java.util.Map;
 public interface UserInfoService extends IService<UserInfo> {
     // 用户手机号登录接口
     Map<String, Object> loginUser(LoginVo loginVo);
+
+    // 根据openid进行数据库查询
+    UserInfo selectWxInfoOpenId(String openId);
 }

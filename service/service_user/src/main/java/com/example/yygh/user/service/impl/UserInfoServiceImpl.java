@@ -23,7 +23,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    // 用户手机号登录接口
+    // 登录接口
     @Override
     public Map<String, Object> loginUser(LoginVo loginVo) {
         // 从 loginVo 中获取手机号和验证码
@@ -41,18 +41,32 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
             throw new YyghException(ResultCodeEnum.CODE_ERROR);
         }
 
-        //手机号已被使用
-        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("phone", phone);
-        UserInfo userInfo = baseMapper.selectOne(queryWrapper);
-        // 判断手机号是否是第一次使用
-        if(null == userInfo) {
-            // 如果是第一次使用，将信息添加到数据库中
-            userInfo = new UserInfo();
-            userInfo.setName("");
-            userInfo.setPhone(phone);
-            userInfo.setStatus(1);
-            this.save(userInfo);
+        //绑定手机号码
+        UserInfo userInfo = null;
+        if(!StringUtils.isEmpty(loginVo.getOpenid())) {
+            userInfo = this.selectWxInfoOpenId(loginVo.getOpenid());
+            if(null != userInfo) {
+                userInfo.setPhone(loginVo.getPhone());
+                this.updateById(userInfo);
+            } else {
+                throw new YyghException(ResultCodeEnum.DATA_ERROR);
+            }
+        }
+
+        //userInfo=null 说明手机直接登录
+        if(userInfo == null) {
+            QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("phone", phone);
+            userInfo = baseMapper.selectOne(queryWrapper);
+            // 判断手机号是否是第一次使用
+            if(null == userInfo) {
+                // 如果是第一次使用，将信息添加到数据库中
+                userInfo = new UserInfo();
+                userInfo.setName("");
+                userInfo.setPhone(phone);
+                userInfo.setStatus(1);
+                baseMapper.insert(userInfo);
+            }
         }
 
         //校验是否被禁用
@@ -75,5 +89,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         map.put("token", token);
 
         return map;
+    }
+
+    // 根据openid进行数据库查询
+    @Override
+    public UserInfo selectWxInfoOpenId(String openId) {
+        return baseMapper.selectOne(new QueryWrapper<UserInfo>().eq("openid", openId));
     }
 }
