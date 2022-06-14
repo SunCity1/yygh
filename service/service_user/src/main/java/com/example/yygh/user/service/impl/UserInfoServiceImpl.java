@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.yygh.common.exception.YyghException;
 import com.example.yygh.common.helper.JwtHelper;
 import com.example.yygh.common.result.ResultCodeEnum;
+import com.example.yygh.enums.AuthStatusEnum;
 import com.example.yygh.model.user.UserInfo;
 import com.example.yygh.user.mapper.UserInfoMapper;
 import com.example.yygh.user.service.UserInfoService;
 import com.example.yygh.vo.user.LoginVo;
+import com.example.yygh.vo.user.UserAuthVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -96,4 +98,23 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     public UserInfo selectWxInfoOpenId(String openId) {
         return baseMapper.selectOne(new QueryWrapper<UserInfo>().eq("openid", openId));
     }
+
+    //用户认证
+    @Override
+    public void userAuth(Long userId, UserAuthVo userAuthVo) {
+        //根据用户id查询用户信息
+        UserInfo userInfo = baseMapper.selectById(userId);
+        //设置认证信息
+        //认证人姓名
+        userInfo.setName(userAuthVo.getName());
+        //其他认证信息
+        userInfo.setCertificatesType(userAuthVo.getCertificatesType());
+        userInfo.setCertificatesNo(userAuthVo.getCertificatesNo());
+        userInfo.setCertificatesUrl(userAuthVo.getCertificatesUrl());
+        userInfo.setAuthStatus(AuthStatusEnum.AUTH_RUN.getStatus());
+        //进行信息更新
+        baseMapper.updateById(userInfo);
+    }
+
+
 }
