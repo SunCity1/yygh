@@ -1,4 +1,4 @@
-package com.example.yygh.user.controller;
+package com.example.yygh.user.api;
 
 import com.example.yygh.common.result.Result;
 import com.example.yygh.common.utils.AuthContextHolder;
