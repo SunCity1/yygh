@@ -13,6 +13,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>service-cmn-client</module>
+        <module>service-hosp-client</module>
+        <module>service_user_client</module>
     </modules>
 
     <properties>

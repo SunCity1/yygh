@@ -1,6 +1,7 @@
 package com.example.yygh.hosp.service;
 
 import com.example.yygh.model.hosp.Schedule;
+import com.example.yygh.vo.hosp.ScheduleOrderVo;
 import com.example.yygh.vo.hosp.ScheduleQueryVo;
 import org.springframework.data.domain.Page;
 
@@ -28,4 +29,11 @@ public interface ScheduleService {
 
     // 根据排班id获取排班数据
     Schedule getScheduleId(String scheduleId);
+
+    // 根据排班id获取预约下单数据
+    ScheduleOrderVo getScheduleOrderVo(String scheduleId);
+
+    // 更新排班数据, 用于mq
+    void update(Schedule schedule);
+
 }

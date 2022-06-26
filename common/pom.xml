@@ -11,6 +11,9 @@
 
     <artifactId>common</artifactId>
     <packaging>pom</packaging>
+    <modules>
+        <module>kafka_util</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
