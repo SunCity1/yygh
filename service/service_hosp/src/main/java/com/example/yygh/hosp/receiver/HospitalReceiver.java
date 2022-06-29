@@ -2,7 +2,7 @@ package com.example.yygh.hosp.receiver;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.common.kafka.constant.MqConst;
-import com.example.common.kafka.service.kafkaService;
+import com.example.common.kafka.service.KafkaService;
 import com.example.yygh.hosp.service.ScheduleService;
 import com.example.yygh.model.hosp.Schedule;
 import com.example.yygh.vo.msm.MsmVo;
@@ -21,7 +21,7 @@ public class HospitalReceiver {
     private ScheduleService scheduleService;
 
     @Autowired
-    private kafkaService kafkaService;
+    private KafkaService kafkaService;
 
     @KafkaListener(topics = {MqConst.ORDER})
     public void receiver(ConsumerRecord record) throws IOException {
