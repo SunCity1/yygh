@@ -30,5 +30,15 @@ public interface OrderService extends IService<OrderInfo> {
      */
     Map<String,Object> show(Long orderId);
 
+    /**
+     * 取消订单
+     * @param orderId
+     */
+    Boolean cancelOrder(Long orderId);
+
+    /**
+     * 就诊提醒
+     */
+    void patientTips();
 
 }

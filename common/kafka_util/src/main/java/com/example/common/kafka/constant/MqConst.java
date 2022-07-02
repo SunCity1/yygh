@@ -9,4 +9,8 @@ public class MqConst {
      * 短信
      */
     public static final String MSM = "msm";
+    /**
+     * 定时任务
+     */
+    public static final String TASK = "task";
 }

@@ -26,11 +26,19 @@ public class HospitalReceiver {
     @KafkaListener(topics = {MqConst.ORDER})
     public void receiver(ConsumerRecord record) throws IOException {
         OrderMqVo orderMqVo = JSONObject.parseObject(record.value().toString(), OrderMqVo.class);
-        //下单成功更新预约数
-        Schedule schedule = scheduleService.getScheduleId(orderMqVo.getScheduleId());
-        schedule.setReservedNumber(orderMqVo.getReservedNumber());
-        schedule.setAvailableNumber(orderMqVo.getAvailableNumber());
-        scheduleService.update(schedule);
+        if(null != orderMqVo.getAvailableNumber()) {
+            //下单成功更新预约数
+            Schedule schedule = scheduleService.getScheduleId(orderMqVo.getScheduleId());
+            schedule.setReservedNumber(orderMqVo.getReservedNumber());
+            schedule.setAvailableNumber(orderMqVo.getAvailableNumber());
+            scheduleService.update(schedule);
+        }else{
+            //取消预约更新预约数
+            Schedule schedule = scheduleService.getScheduleId(orderMqVo.getScheduleId());
+            int availableNumber = schedule.getAvailableNumber().intValue() + 1;
+            schedule.setAvailableNumber(availableNumber);
+            scheduleService.update(schedule);
+        }
         //发送短信
         MsmVo msmVo = orderMqVo.getMsmVo();
         if(null != msmVo) {
