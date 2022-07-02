@@ -1,4 +1,4 @@
-package com.example.yygh.order.controller;
+package com.example.yygh.order.api;
 
 import com.example.yygh.common.result.Result;
 import com.example.yygh.enums.PaymentTypeEnum;

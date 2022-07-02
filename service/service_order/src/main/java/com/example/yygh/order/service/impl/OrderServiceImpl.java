@@ -20,9 +20,7 @@ import com.example.yygh.order.service.WeixinService;
 import com.example.yygh.user.client.PatientFeignClient;
 import com.example.yygh.vo.hosp.ScheduleOrderVo;
 import com.example.yygh.vo.msm.MsmVo;
-import com.example.yygh.vo.order.OrderMqVo;
-import com.example.yygh.vo.order.OrderQueryVo;
-import com.example.yygh.vo.order.SignInfoVo;
+import com.example.yygh.vo.order.*;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderInfo> implements OrderService {
@@ -298,6 +297,24 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderInfo> implem
             kafkaService.sendMessage(MqConst.MSM, msmVo);
         }
     }
+
+    @Override
+    public Map<String, Object> getCountMap(OrderCountQueryVo orderCountQueryVo) {
+        Map<String, Object> map = new HashMap<>();
+
+        List<OrderCountVo> orderCountVoList
+                = baseMapper.selectOrderCount(orderCountQueryVo);
+        // 日期列表
+        List<String> dateList
+                =orderCountVoList.stream().map(OrderCountVo::getReserveDate).collect(Collectors.toList());
+        // 统计列表
+        List<Integer> countList
+                =orderCountVoList.stream().map(OrderCountVo::getCount).collect(Collectors.toList());
+        map.put("dateList", dateList);
+        map.put("countList", countList);
+        return map;
+    }
+
 
     private OrderInfo packOrderInfo(OrderInfo orderInfo) {
         orderInfo.getParam().put("orderStatusString", OrderStatusEnum.getStatusNameByStatus(orderInfo.getOrderStatus()));
