@@ -6,11 +6,11 @@
         <module>common</module>
         <module>common/common_util</module>
         <module>common/service_util</module>
+        <module>common/common_util</module>
         <module>model</module>
         <module>service</module>
         <module>service/service_user</module>
         <module>service/service_hosp</module>
-        <module>common/common_util</module>
         <module>service/service_msm</module>
         <module>service-client</module>
         <module>service-gateway</module>
@@ -32,7 +32,7 @@
         <cloud.version>Hoxton.RELEASE</cloud.version>
         <alibaba.version>2.2.0.RELEASE</alibaba.version>
         <mybatis-plus.version>3.3.1</mybatis-plus.version>
-        <mysql.version>5.1.46</mysql.version>
+        <mysql.version>8.0.27</mysql.version>
         <swagger.version>2.7.0</swagger.version>
         <jwt.version>0.7.0</jwt.version>
         <fastjson.version>1.2.29</fastjson.version>

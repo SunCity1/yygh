@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.yygh.cmn.listener.DictListener;
 import com.example.yygh.cmn.mapper.DictMapper;
 import com.example.yygh.cmn.service.DictService;
+import com.example.yygh.common.exception.YyghException;
 import com.example.yygh.model.cmn.Dict;
 import com.example.yygh.vo.cmn.DictEeVo;
 import org.springframework.beans.BeanUtils;
@@ -66,7 +67,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
             EasyExcel.write(response.getOutputStream(), DictEeVo.class).sheet("数据字典")
                     .doWrite(dictVoList);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new YyghException("导出异常", 500);
         }
     }
 
