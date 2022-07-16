@@ -1,15 +1,19 @@
 package com.example.yygh.hosp.receiver;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.common.kafka.constant.MqConst;
-import com.example.common.kafka.service.KafkaService;
+import com.example.common.rabbit.constant.MqConst;
+import com.example.common.rabbit.service.RabbitService;
 import com.example.yygh.hosp.service.ScheduleService;
 import com.example.yygh.model.hosp.Schedule;
 import com.example.yygh.vo.msm.MsmVo;
 import com.example.yygh.vo.order.OrderMqVo;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,11 +25,15 @@ public class HospitalReceiver {
     private ScheduleService scheduleService;
 
     @Autowired
-    private KafkaService kafkaService;
+    private RabbitService rabbitService;
 
-    @KafkaListener(topics = {MqConst.ORDER})
-    public void receiver(ConsumerRecord record) throws IOException {
-        OrderMqVo orderMqVo = JSONObject.parseObject(record.value().toString(), OrderMqVo.class);
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = MqConst.QUEUE_ORDER, durable = "true"),
+            exchange = @Exchange(value = MqConst.EXCHANGE_DIRECT_ORDER),
+            key = {MqConst.ROUTING_ORDER}
+    ))
+    public void receiver(OrderMqVo orderMqVo, Message message, RabbitProperties.Cache.Channel channel) throws IOException {
+
         if(null != orderMqVo.getAvailableNumber()) {
             //下单成功更新预约数
             Schedule schedule = scheduleService.getScheduleId(orderMqVo.getScheduleId());
@@ -42,7 +50,7 @@ public class HospitalReceiver {
         //发送短信
         MsmVo msmVo = orderMqVo.getMsmVo();
         if(null != msmVo) {
-            kafkaService.sendMessage(MqConst.MSM, msmVo);
+            rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_MSM, MqConst.ROUTING_MSM_ITEM, msmVo);
         }
     }
 }

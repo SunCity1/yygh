@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.common.kafka.constant.MqConst;
-import com.example.common.kafka.service.KafkaService;
+import com.example.common.rabbit.constant.MqConst;
+import com.example.common.rabbit.service.RabbitService;
 import com.example.yygh.common.exception.YyghException;
 import com.example.yygh.common.helper.HttpRequestHelper;
 import com.example.yygh.common.result.ResultCodeEnum;
@@ -44,7 +44,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderInfo> implem
     private HospitalFeignClient hospitalFeignClient;
 
     @Autowired
-    private KafkaService kafkaService;
+    private RabbitService rabbitService;
 
     @Autowired
     private WeixinService weixinService;
@@ -157,7 +157,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderInfo> implem
             msmVo.setParam(param);
 
             orderMqVo.setMsmVo(msmVo);
-            kafkaService.sendMessage(MqConst.ORDER, orderMqVo);
+            rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_ORDER, MqConst.ROUTING_ORDER, orderMqVo);
 
         } else {
             throw new YyghException(result.getString("message"), ResultCodeEnum.FAIL.getCode());
@@ -273,7 +273,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderInfo> implem
             }};
             msmVo.setParam(param);
             orderMqVo.setMsmVo(msmVo);
-            kafkaService.sendMessage(MqConst.ORDER, orderMqVo);
+            rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_ORDER, MqConst.ROUTING_ORDER, orderMqVo);
         }
         return true;
     }
@@ -295,7 +295,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderInfo> implem
                 put("name", orderInfo.getPatientName());
             }};
             msmVo.setParam(param);
-            kafkaService.sendMessage(MqConst.MSM, msmVo);
+            rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_MSM, MqConst.ROUTING_MSM_ITEM, msmVo);
         }
     }
 

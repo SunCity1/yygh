@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kafka_util</artifactId>
+    <artifactId>rabbit-util</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -17,14 +17,14 @@
     </properties>
 
     <dependencies>
-        <!--kafka 消息队列-->
+        <!--rabbitmq消息队列-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bus-kafka</artifactId>
+            <artifactId>spring-cloud-starter-bus-amqp</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>

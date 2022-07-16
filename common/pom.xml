@@ -12,7 +12,7 @@
     <artifactId>common</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>kafka_util</module>
+        <module>rabbit-util</module>
     </modules>
 
     <properties>
