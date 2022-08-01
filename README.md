@@ -4,6 +4,26 @@
 
 
 ## 项目目录
+* conmmon：公共模块父节点
+  * common_util：工具类模块，比如exception、Jwt、Result 返回类型等
+  * rabbit_util：rabbitmq 业务封装，比如配置，交换机队列常量定义，生产消息方法等
+  * service_util：service服务的工具包，包含service服务的公共配置类，比如 Redis、Swagger 配置
+* model：实体类模块
+* service_gateway：服务网关
+* service：api接口服务父节点
+  * service_cmn：公共api接口服务
+  * service_hosp：医院api接口服务
+  * service_msm：短信 api接口服务
+  * service_order：订单api接口服务
+  * service_oss：文件api接口服务
+  * service_statistics：统计api接口服务
+  * service_task：定时任务服务
+  * service_user：用户api接口服务
+* service-client：feign服务调用父节点
+  * service_cmn_client：公共api接口
+  * service_hosp_client：医院api接口
+  * service_order_client：订单api接口
+  * service_user_client：用户api接口
 
 ## 项目选型
 
@@ -26,5 +46,3 @@
 |     Lombok     |     简化对象封装工具      | [ https://github.com/rzwitserloot/lombok](https://github.com/rzwitserloot/lombok) |
 |     Nginx      |  HTTP和反向代理web服务器  |                      http://nginx.org/                       |
 |    JustAuth    |     第三方登录的工具      |             https://github.com/justauth/JustAuth             |
-
-### 前端技术
