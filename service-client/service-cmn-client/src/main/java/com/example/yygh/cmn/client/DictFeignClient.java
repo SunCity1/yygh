@@ -5,10 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-/**
- * 数据字典API接口
- */
-@FeignClient("service-cmn") // name=service-cmn Nacos中注册的服务名
+@FeignClient("service-cmn")
 @Repository
 public interface DictFeignClient {
 

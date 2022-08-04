@@ -58,7 +58,7 @@
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
                 <version>${alibaba.version}</version>
                 <type>pom</type>
-                <scope>import</scope>e
+                <scope>import</scope>
             </dependency>
             <!--mybatis-plus 持久层-->
             <dependency>
