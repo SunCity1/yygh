@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(basePackages = "com.example")    // 可扫描到 service_util 下的 Swagger2Config
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = "com.example")
+@EnableFeignClients(basePackages = "com.example")   // 开启服务调用
 public class ServiceHospApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServiceHospApplication.class, args);
